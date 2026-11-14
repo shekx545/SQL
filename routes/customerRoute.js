@@ -33,21 +33,21 @@ const {
  *               - first_name
  *               - last_name
  *               - phone
- *               - hashed_password
+ *               - password
  *               - email
  *               - gender_id
  *               - lang_id
  *             properties:
  *               first_name:
  *                 type: string
- *                 example: "Namuna matn"
+ *                 example: "Ali"
  *               last_name:
  *                 type: string
- *                 example: "Namuna matn"
+ *                 example: "Valiyev"
  *               phone:
  *                 type: string
  *                 example: "+998901234567"
- *               hashed_password:
+ *               password:
  *                 type: string
  *                 example: "SuperParol123"
  *               email:
@@ -56,10 +56,7 @@ const {
  *               birth_date:
  *                 type: string
  *                 format: date
- *                 example: "2026-11-01"
- *               hashed_refresh_token:
- *                 type: string
- *                 example: "Namuna matn"
+ *                 example: "2000-11-01"
  *               gender_id:
  *                 type: integer
  *                 example: 1

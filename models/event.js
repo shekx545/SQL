@@ -70,7 +70,7 @@ const Event = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: "languages",
+        model: "langs",
         key: "id",
       },
       onDelete: "RESTRICT",

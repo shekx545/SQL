@@ -1,12 +1,24 @@
 const { Op } = require("sequelize");
 const { VenuePhoto, Venue } = require("../models");
 
-// CREATE
+
 const createVenuePhoto = async (req, res) => {
   try {
     const { url, venue_id } = req.body;
 
-    const item = await VenuePhoto.create({ url, venue_id });
+    const venue = await Venue.findByPk(venue_id);
+
+    if (!venue) {
+      return res.status(404).json({
+        success: false,
+        message: "Bunday venue mavjud emas",
+      });
+    }
+
+    const item = await VenuePhoto.create({
+      url,
+      venue_id,
+    });
 
     return res.status(201).json({
       success: true,
@@ -14,10 +26,14 @@ const createVenuePhoto = async (req, res) => {
       data: item,
     });
   } catch (error) {
-    console.error("CREATE VENUE_PHOTOS ERROR:", error.message);
-    return res.status(500).json({ success: false, message: error.message });
+    console.error("CREATE VENUE_PHOTOS ERROR:", error);
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
+
 
 // GET ALL
 const getVenuePhotos = async (req, res) => {

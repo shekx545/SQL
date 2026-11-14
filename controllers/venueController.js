@@ -1,12 +1,58 @@
 const { Op } = require("sequelize");
 const { Venue, District, Region } = require("../models");
 
-// CREATE
+
 const createVenue = async (req, res) => {
   try {
-    const { name, address, location, site, phone, schema, region_id, district_id } = req.body;
+    const {
+      name,
+      address,
+      location,
+      site,
+      phone,
+      schema,
+      region_id,
+      district_id,
+    } = req.body;
 
-    const item = await Venue.create({ name, address, location, site, phone, schema, region_id, district_id });
+    // Region mavjudligini tekshirish
+    const region = await Region.findByPk(region_id);
+
+    if (!region) {
+      return res.status(404).json({
+        success: false,
+        message: "Bunday region mavjud emas",
+      });
+    }
+
+    // District mavjudligini tekshirish
+    const district = await District.findByPk(district_id);
+
+    if (!district) {
+      return res.status(404).json({
+        success: false,
+        message: "Bunday district mavjud emas",
+      });
+    }
+
+    // District tanlangan regionga tegishliligini tekshirish
+    if (district.region_id !== Number(region_id)) {
+      return res.status(400).json({
+        success: false,
+        message: "District ushbu regionga tegishli emas",
+      });
+    }
+
+    const item = await Venue.create({
+      name,
+      address,
+      location,
+      site,
+      phone,
+      schema,
+      region_id,
+      district_id,
+    });
 
     return res.status(201).json({
       success: true,
@@ -14,10 +60,14 @@ const createVenue = async (req, res) => {
       data: item,
     });
   } catch (error) {
-    console.error("CREATE VENUES ERROR:", error.message);
-    return res.status(500).json({ success: false, message: error.message });
+    console.error("CREATE VENUES ERROR:", error);
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
+
 
 // GET ALL
 const getVenues = async (req, res) => {

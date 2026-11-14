@@ -1,12 +1,46 @@
 const { Op } = require("sequelize");
 const { Event, EventType, HumanCategory, Lang, Venue } = require("../models");
 
-// CREATE
 const createEvent = async (req, res) => {
   try {
-    const { name, photo, start_date, start_time, finish_date, finish_time, info, release_date, event_type_id, human_category_id, venue_id, lang_id } = req.body;
+    const {
+      name,
+      photo,
+      start_date,
+      start_time,
+      finish_date,
+      finish_time,
+      info,
+      release_date,
+      event_type_id,
+      human_category_id,
+      venue_id,
+      lang_id,
+    } = req.body;
 
-    const item = await Event.create({ name, photo, start_date, start_time, finish_date, finish_time, info, release_date, event_type_id, human_category_id, venue_id, lang_id });
+    const lang = await Lang.findByPk(lang_id);
+
+    if (!lang) {
+      return res.status(404).json({
+        success: false,
+        message: `Bunday lang_id mavjud emas: ${lang_id}`,
+      });
+    }
+
+    const item = await Event.create({
+      name,
+      photo,
+      start_date,
+      start_time,
+      finish_date,
+      finish_time,
+      info,
+      release_date,
+      event_type_id,
+      human_category_id,
+      venue_id,
+      lang_id,
+    });
 
     return res.status(201).json({
       success: true,
@@ -15,7 +49,11 @@ const createEvent = async (req, res) => {
     });
   } catch (error) {
     console.error("CREATE EVENTS ERROR:", error.message);
-    return res.status(500).json({ success: false, message: error.message });
+
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
 
